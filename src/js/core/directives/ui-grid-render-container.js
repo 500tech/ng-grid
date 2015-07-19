@@ -68,49 +68,7 @@
             $elm.addClass('ui-grid-render-container-' + $scope.containerId);
 
             // Scroll the render container viewport when the mousewheel is used
-            gridUtil.on.mousewheel($elm, function (event) {
-              var scrollEvent = new ScrollEvent(grid, rowContainer, colContainer, ScrollEvent.Sources.RenderContainerMouseWheel);
-              if (event.deltaY !== 0) {
-                var scrollYAmount = event.deltaY * -1 * event.deltaFactor;
 
-                scrollTop = containerCtrl.viewport[0].scrollTop;
-                // Get the scroll percentage
-                var verticalScrollLength = rowContainer.getVerticalScrollLength();
-                var scrollYPercentage;
-                if (verticalScrollLength === 0) { scrollYPercentage = 0; }
-                else { scrollYPercentage = (scrollTop + scrollYAmount) / verticalScrollLength; }
-
-                // Keep scrollPercentage within the range 0-1.
-                if (scrollYPercentage < 0) { scrollYPercentage = 0; }
-                else if (scrollYPercentage > 1) { scrollYPercentage = 1; }
-
-                scrollEvent.y = { percentage: scrollYPercentage, pixels: scrollYAmount };
-              }
-              if (event.deltaX !== 0) {
-                var scrollXAmount = event.deltaX * event.deltaFactor;
-
-                // Get the scroll percentage
-                scrollLeft = gridUtil.normalizeScrollLeft(containerCtrl.viewport, grid);
-                var scrollXPercentage = (scrollLeft + scrollXAmount) / (colContainer.getCanvasWidth() - colContainer.getViewportWidth());
-
-                // Keep scrollPercentage within the range 0-1.
-                if (scrollXPercentage < 0) { scrollXPercentage = 0; }
-                else if (scrollXPercentage > 1) { scrollXPercentage = 1; }
-
-                scrollEvent.x = { percentage: scrollXPercentage, pixels: scrollXAmount };
-              }
-
-              // Let the parent container scroll if the grid is already at the top/bottom
-              if ((event.deltaY !== 0 && (scrollEvent.atTop(scrollTop) || scrollEvent.atBottom(scrollTop))) ||
-                  (event.deltaX !== 0 && (scrollEvent.atLeft(scrollLeft) || scrollEvent.atRight(scrollLeft)))) {
-                //parent controller scrolls
-              }
-              else {
-                event.preventDefault();
-                scrollEvent.fireThrottledScrollingEvent('', scrollEvent);
-              }
-
-            });
 
             $elm.bind('$destroy', function() {
               $elm.unbind('keydown');
