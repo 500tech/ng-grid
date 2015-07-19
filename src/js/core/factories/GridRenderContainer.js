@@ -580,6 +580,7 @@ angular.module('ui.grid')
     var self = this;
 
     var asterisksArray = [],
+        percentArray = [],
         asteriskNum = 0,
         usedWidthSum = 0,
         ret = '';
@@ -599,7 +600,6 @@ angular.module('ui.grid')
       var width = 0;
       // Skip hidden columns
       if (!column.visible) { return; }
-
       if (angular.isNumber(column.width)) {
         // pixel width, set to this value
         width = parseInt(column.width, 10);
@@ -607,24 +607,29 @@ angular.module('ui.grid')
         column.drawnWidth = width;
 
       } else if (gridUtil.endsWith(column.width, "%")) {
-        // percentage width, set to percentage of the viewport
-        width = parseInt(parseInt(column.width.replace(/%/g, ''), 10) / 100 * availableWidth);
-
-        if ( width > column.maxWidth ){
-          width = column.maxWidth;
-        }
-
-        if ( width < column.minWidth ){
-          width = column.minWidth;
-        }
-
-        usedWidthSum = usedWidthSum + width;
-        column.drawnWidth = width;
+        percentArray.push(column);
       } else if (angular.isString(column.width) && column.width.indexOf('*') !== -1) {
         // is an asterisk column, the gridColumn already checked the string consists only of '****'
         asteriskNum = asteriskNum + column.width.length;
         asterisksArray.push(column);
       }
+    });
+    // Get the remaining width (available width subtracted by the used widths sum)
+    var remainingWidth = availableWidth - usedWidthSum;
+    percentArray.forEach(function(column, i) {
+      // percentage width, set to percentage of the remaining width
+      var width = parseInt(parseInt(column.width.replace(/%/g, ''), 10) / 100 * remainingWidth);
+
+      if ( width > column.maxWidth ){
+        width = column.maxWidth;
+      }
+
+      if ( width < column.minWidth ){
+        width = column.minWidth;
+      }
+
+      usedWidthSum = usedWidthSum + width;
+      column.drawnWidth = width;
     });
 
     // Get the remaining width (available width subtracted by the used widths sum)
