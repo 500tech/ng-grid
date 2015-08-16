@@ -208,12 +208,13 @@ describe('ui.grid.resizeColumns', function () {
           $scope.$digest();
         });
 
-        it('should cause the column to resize by the amount change in the X axis', function () {
-          var firstColumnUid = gridScope.grid.columns[0].uid;
-          var newWidth = $(grid).find('.' + uiGridConstants.COL_CLASS_PREFIX + firstColumnUid).first().width();
+        // (Adam): We disabled the actual resizing ability, just using the event
+        // it('should cause the column to resize by the amount change in the X axis', function () {
+        //   var firstColumnUid = gridScope.grid.columns[0].uid;
+        //   var newWidth = $(grid).find('.' + uiGridConstants.COL_CLASS_PREFIX + firstColumnUid).first().width();
 
-          expect(newWidth - initialWidth).toEqual(xDiff);
-        });
+        //   expect(newWidth - initialWidth).toEqual(xDiff);
+        // });
 
         it('should remove the overlay', function () {
           var overlay = $(grid).find('.ui-grid-resize-overlay');
